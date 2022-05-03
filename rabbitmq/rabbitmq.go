@@ -2,7 +2,7 @@ package rabbitmq
 
 import (
 	"encoding/json"
-	"github.com/XiovV/gob_server/models"
+	"github.com/XiovV/selly-server/models"
 	"github.com/streadway/amqp"
 	"os"
 )

@@ -2,7 +2,7 @@ package server
 
 import (
 	"fmt"
-	"github.com/XiovV/gob_server/hub"
+	"github.com/XiovV/selly-server/hub"
 	"log"
 	"net/http"
 )

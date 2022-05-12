@@ -3,7 +3,6 @@ package server
 import (
 	"github.com/XiovV/selly-server/hub"
 	"github.com/XiovV/selly-server/jwt"
-	"log"
 	"net/http"
 )
 
@@ -24,7 +23,7 @@ func (s *Server) OnConnect(next http.HandlerFunc) http.HandlerFunc {
 
 		c, err := s.upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			log.Print("upgrade:", err)
+			s.log.Error("upgrader error:", err)
 			return
 		}
 

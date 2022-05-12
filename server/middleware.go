@@ -1,8 +1,8 @@
 package server
 
 import (
-	"fmt"
 	"github.com/XiovV/selly-server/hub"
+	"github.com/XiovV/selly-server/jwt"
 	"log"
 	"net/http"
 )
@@ -10,9 +10,17 @@ import (
 func (s *Server) OnConnect(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		params := r.URL.Query()
-		username := params.Get("username")
+		token := params.Get("jwt")
 
-		r = s.contextSetSender(r, username)
+		validatedToken, err := jwt.Validate(token)
+		if err != nil {
+			s.log.Error("error validating jwt:", err)
+			return
+		}
+
+		sellyID := jwt.GetClaimString(validatedToken, "sellyId")
+
+		r = s.contextSetSender(r, sellyID)
 
 		c, err := s.upgrader.Upgrade(w, r, nil)
 		if err != nil {
@@ -22,9 +30,9 @@ func (s *Server) OnConnect(next http.HandlerFunc) http.HandlerFunc {
 
 		r = s.contextSetConnection(r, c)
 
-		fmt.Println(username, "connected")
+		s.log.Debugw("connected", "user", sellyID)
 
-		s.hub.Push(hub.Client{Username: username, Conn: c})
+		s.hub.Push(hub.Client{SellyID: sellyID, Conn: c})
 
 		next(w, r)
 	}

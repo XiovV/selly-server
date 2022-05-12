@@ -7,8 +7,8 @@ import (
 type userKey string
 
 type Client struct {
-	Username string
-	Conn     *websocket.Conn
+	SellyID string
+	Conn    *websocket.Conn
 }
 
 type Hub struct {
@@ -26,7 +26,7 @@ func (h *Hub) Get(username string) (*websocket.Conn, bool) {
 }
 
 func (h *Hub) Push(client Client) {
-	h.connections[userKey(client.Username)] = client.Conn
+	h.connections[userKey(client.SellyID)] = client.Conn
 }
 
 func (h *Hub) Pop(username string) {

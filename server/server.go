@@ -38,8 +38,17 @@ func (s *Server) Serve() {
 	s.log.Infow("running", "port", os.Getenv("PORT"), "environment", os.Getenv("ENV"), "version", version)
 
 	http.HandleFunc("/chat", s.OnConnect(s.Chat))
+	http.HandleFunc("/health", s.Health)
 
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), nil))
+}
+
+func (s *Server) Health(w http.ResponseWriter, r *http.Request) {
+	_, err := s.upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		s.log.Error("upgrader error:", err)
+		return
+	}
 }
 
 func (s *Server) Chat(w http.ResponseWriter, r *http.Request) {

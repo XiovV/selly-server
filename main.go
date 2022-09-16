@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/XiovV/selly-server/hub"
 	"github.com/XiovV/selly-server/rabbitmq"
+	"github.com/XiovV/selly-server/redis"
 	"github.com/XiovV/selly-server/server"
 	"go.uber.org/zap"
 	"log"
@@ -28,6 +29,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	s := server.New(hub, rabbitmq, sugar)
+	redis := redis.New()
+
+	s := server.New(hub, rabbitmq, redis, sugar)
 	s.Serve()
 }

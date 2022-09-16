@@ -33,6 +33,8 @@ func (s *Server) OnConnect(next http.HandlerFunc) http.HandlerFunc {
 
 		s.hub.Push(hub.Client{SellyID: sellyID, Conn: c})
 
+		s.redis.SetOnline(sellyID)
+
 		next(w, r)
 	}
 }

@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 const (
@@ -78,6 +79,8 @@ func (s *Server) Chat(w http.ResponseWriter, r *http.Request) {
 			}
 			break
 		}
+
+		message.DateCrated = time.Now().Unix()
 
 		receiver, exists := s.hub.Get(message.Receiver)
 

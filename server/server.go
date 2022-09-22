@@ -130,15 +130,12 @@ func (s *Server) handleIncomingMessage(msg json.RawMessage) {
 }
 
 func (s *Server) sendMessage(msg models.Message, receiver *websocket.Conn) {
-	var m struct {
-		Type string
-		Msg  models.Message
+	message := Envelope{
+		Type: messageType,
+		Msg:  msg,
 	}
 
-	m.Type = "message"
-	m.Msg = msg
-
-	err := receiver.WriteJSON(m)
+	err := receiver.WriteJSON(message)
 	if err != nil {
 		s.log.Error("failed to send a message:", err)
 	}

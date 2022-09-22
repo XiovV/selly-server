@@ -38,7 +38,7 @@ func New(hub *hub.Hub, mq *rabbitmq.RabbitMQ, redis *redis.Redis, logger *zap.Su
 	return s
 }
 
-type Envelope struct {
+type Payload struct {
 	Type string
 	Msg  any
 }
@@ -67,7 +67,7 @@ func (s *Server) Chat(w http.ResponseWriter, r *http.Request) {
 	sender := s.contextGetSender(r)
 
 	var msg json.RawMessage
-	payload := Envelope{Msg: &msg}
+	payload := Payload{Msg: &msg}
 
 	for {
 		err := c.ReadJSON(&payload)
@@ -130,7 +130,7 @@ func (s *Server) handleIncomingMessage(msg json.RawMessage) {
 }
 
 func (s *Server) sendMessage(msg models.Message, receiver *websocket.Conn) {
-	message := Envelope{
+	message := Payload{
 		Type: messageType,
 		Msg:  msg,
 	}
